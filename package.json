@@ -9,15 +9,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devakitella/personal-budget.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/devakitella/personal-budget/issues"
   },
-  "homepage": "https://github.com/devakitella/personal-budget#readme",
   "dependencies": {
     "express": "^4.18.2",
     "mongoose": "^5.10.9"
