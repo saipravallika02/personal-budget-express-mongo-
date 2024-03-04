@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Added SEO change. Adding description in meta tag here-->
+    <meta name="description"
+        content="Manage your personal budget effectively with our free budgeting app. Stay on track, receive alerts, and achieve financial success.">
+    <!--Modifying title as it is a SEO change-->
+    <title>Personal Budget - Free Budgeting App for Financial Success</title>
+    <!--Added SEO change. Adding keywords in meta tag here-->
+    <meta name="keywords" content="personal budget, budgeting app, financial success, budget management">
+    <link rel="stylesheet" href="./reset.css">
+    <link rel="stylesheet" href="./main.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <!--Added semantic changes here. Adding nav tag here instead of div-->
+    <nav class="menu" aria-label="Main Menu"> <!--Added A11y change. Added aria-label attribute-->
+        <ul>
+            <li><a href="./index.html">Homepage</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./login.html">Login</a></li>
+            <li><a href="https://google.com">Google</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero" role="banner">
+        <h1>Personal Budget</h1>
+        <h2>A personal-budget management app</h2>
+    </div>
+
+    <div class="container center">
+        <!--Modified div tag to main tag as it is a A11Y change-->
+        <main class="page-area" id="main-content"> <!--Added id attribute here as it is a A11Y change-->
+            <!--Added semantic changes here. Adding section tag here instead of div-->
+            <section class="text-box">
+                <h1>Stay on track</h1>
+                <p>
+                    Do you know where you are spending your money? If you really stop to track it down,
+                    you would get surprised! Proper budget management depends on real data... and this
+                    app will help you with that!
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Alerts</h1>
+                <p>
+                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Results</h1>
+                <p>
+                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they to live happier lives... since they expend without guilt or fear...
+                    because they know it is all good and accounted for.
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Chart</h1>
+                <p>
+                    Drawing this using canvas
+                </p>
+                <p>
+                    <canvas id="myChart" width="300" height="200"></canvas>
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Stay on track</h1>
+                <p>
+                    Do you know where you are spending your money? If you really stop to track it down,
+                    you would get surprised! Proper budget management depends on real data... and this
+                    app will help you with that!
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Alerts</h1>
+                <p>
+                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Results</h1>
+                <p>
+                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they to live happier lives... since they expend without guilt or fear...
+                    because they know it is all good and accounted for.
+                </p>
+            </section>
+
+            <section class="text-box">
+                <h1>Free</h1>
+                <p>
+                    This app is free!!! And you are the only one holding your data!
+                </p>
+            </section>
+
+            <h1>My Budget Chart</h1>
+            <svg id="chart" width="600" height="600"></svg>
+            <button onclick="getChart()">Change Data</button>
+            <h1>Chart using D3JS</h1>
+            <svg id="chart-container" width="800" height="800"></svg>
+
+        </main>
+
+    </div>
+    <!--Added semantic changes here. Adding footer tag here instead of div-->
+    <footer class="bottom">
+        <div class="center">
+            All rights reserved &copy; Devaki Tella
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"
+        integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"
+        integrity="sha512-G8JE1Xbr0egZE5gNGyUm1fF764iHVfRXshIoUWCTPAbKkkItp/6qal5YAHXrxEu4HNfPTQs6HOu3D5vCGS1j3w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var budget = {
+            labels: [],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [],
+                backgroundColor: []
+            }]
+        };
+
+        function createDoughnut() {
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var myDoughnut = new Chart(ctx, {
+                type: 'doughnut',
+                data: budget
+            });
+        }
+
+        function getBudget() {
+            axios.get('/budget')
+                .then(function (res) {
+                    console.log(res)
+                    budget.datasets[0].data = res.data.map(item => item.budget);
+                    budget.labels = res.data.map(item => item.title);
+                    budget.datasets[0].backgroundColor = res.data.map(item => item.color)
+                    createDoughnut();
+                });
+        }
+
+        getBudget();
+
+    </script>
+
+    <script>
+        function getChartUsingD3JS() {
+            axios.get('/budget')
+                .then(function (res) {
+                    const budgetData = res.data;
+
+                    const margin = { top: 20, right: 30, bottom: 40, left: 40 },
+                        width = 800 - margin.left - margin.right,
+                        height = 400 - margin.top - margin.bottom;
+
+                    const svg = d3.select('#chart')
+                        .attr('width', width + margin.left + margin.right)
+                        .attr('height', height + margin.top + margin.bottom)
+                        .append('g')
+                        .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                    const x = d3.scaleBand()
+                        .range([0, width])
+                        .padding(0.4)
+                        .domain(budgetData.map(d => d.title));
+
+                    const y = d3.scaleLinear()
+                        .range([height, 0])
+                        .domain([0, d3.max(budgetData, d => d.budget)]);
+
+                    svg.selectAll('rect')
+                        .data(budgetData)
+                        .enter().append('rect')
+                        .attr('x', d => x(d.title))
+                        .attr('y', d => y(d.budget))
+                        .attr('width', x.bandwidth())
+                        .attr('height', d => height - y(d.budget))
+                        .attr('fill', d => d.color);
+
+                    svg.append('g')
+                        .attr('class', 'x-axis')
+                        .attr('transform', `translate(0, ${height})`)
+                        .call(d3.axisBottom(x));
+
+                    svg.append('g')
+                        .attr('class', 'y-axis')
+                        .call(d3.axisLeft(y));
+
+                    svg.selectAll('.label')
+                        .data(budgetData)
+                        .enter().append('text')
+                        .attr('class', 'label')
+                        .attr('x', d => x(d.title) + x.bandwidth() / 2)
+                        .attr('y', d => y(d.budget) - 5)
+                        .attr('text-anchor', 'middle')
+                        .text(d => d.budget);
+
+                    // Add a chart title
+                    svg.append('text')
+                        .attr('x', width / 2)
+                        .attr('y', (-margin.top / 2) / 2)
+                        .attr('text-anchor', 'middle')
+                        .style('font-size', '20px')
+                        .text('Budget by Category');
+                })
+                .catch(function (error) {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        getChartUsingD3JS();
+    </script>
+
+    <script>
+        function getChart() {
+            axios.get('/example')
+                .then(function (res) {
+                    const donutData = res.data;
+
+                const width = 200;
+                const height = 200;
+                const radius = Math.min(width, height) / 2;
+
+                // Create an SVG element for the donut chart
+                const svg = d3.select("#chart-container")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+                // Define a color scale for the donut segments
+                const color = d3.scaleOrdinal()
+                    .domain(donutData.map(d => d.title))
+                    .range(donutData.map(d => d.color));
+
+                // Define a pie layout
+                const pie = d3.pie()
+                    .value(d => Math.random());
+
+                // Generate the arc path data for the donut segments
+                const path = d3.arc()
+                    .outerRadius(radius - 10)
+                    .innerRadius(radius - 70);
+
+                // Join data to path elements
+                const arcs = svg.selectAll(".arc")
+                    .data(pie(donutData))
+                    .enter()
+                    .append("g")
+                    .attr("class", "arc");
+
+                // Append paths for each donut segment
+                arcs.append("path")
+                    .attr("d", path)
+                    .attr("fill", d => color(d.data.color));
+
+                // Add labels with lines to the donut segments
+                arcs.append("text")
+                    .attr("transform", d => "translate(" + path.centroid(d) + ")")
+                    .attr("dy", "0.35em")
+                    .text(d => d.data.title);
+
+            }).catch(function (error) {
+                console.error("Error loading data:", error);
+            });
+        }
+        getChart();
+    </script>
+</body>
+
+</html>
